@@ -87,6 +87,47 @@
 
     textarea:focus { border-color: #1a1a2e; }
 
+    .file-upload {
+      margin-top: 16px;
+      border: 2px dashed #ddd;
+      border-radius: 6px;
+      padding: 16px;
+      text-align: center;
+      background: #fafafa;
+    }
+
+    .file-upload input[type="file"] {
+      width: 100%;
+      font-size: 13px;
+      color: #555;
+    }
+
+    .file-upload p {
+      font-size: 12px;
+      color: #aaa;
+      margin-top: 8px;
+    }
+
+    .upload-message {
+      margin-top: 12px;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .upload-message.success {
+      background: #e6f4ea;
+      color: #2d6a3f;
+      border: 1px solid #b7dfbf;
+    }
+
+    .upload-message.error {
+      background: #fce8e8;
+      color: #8b2020;
+      border: 1px solid #f5c0c0;
+    }
+
     button {
       margin-top: 20px;
       width: 100%;
@@ -159,12 +200,24 @@
 
     <div class="panel">
       <h2>Worker Input</h2>
-      <form method="POST" action="/generate">
+      <form method="POST" action="/generate" enctype="multipart/form-data">
         <label>Site Name</label>
         <input type="text" name="site_name" placeholder="e.g. City Road Development, Manchester" value="{{ site_name or '' }}">
 
         <label>Describe your day on site</label>
-        <textarea name="worker_input" rows="12" placeholder="Describe what happened today in your own words — activities completed, any issues or delays, and what is planned for tomorrow...">{{ worker_input or '' }}</textarea>
+        <textarea name="worker_input" rows="10" placeholder="Describe what happened today in your own words — activities completed, any issues or delays, and what is planned for tomorrow...">{{ worker_input or '' }}</textarea>
+
+        <label>Site Photo (optional)</label>
+        <div class="file-upload">
+          <input type="file" name="site_photo" accept=".png,.jpg,.jpeg,.gif,.pdf">
+          <p>PNG, JPG, GIF or PDF — max 5MB</p>
+        </div>
+
+        {% if upload_message %}
+          <div class="upload-message {{ 'success' if uploaded_filename else 'error' }}">
+            {{ upload_message }}
+          </div>
+        {% endif %}
 
         <button type="submit">Generate Site Report</button>
       </form>
