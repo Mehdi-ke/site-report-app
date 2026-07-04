@@ -29,23 +29,52 @@ def get_media_type(filename):
 def generate_site_report(worker_input, site_name, image_data=None, media_type=None):
     today = date.today().strftime("%d/%m/%Y")
 
-    system_prompt = f"""You are a construction site report assistant.
+    system_prompt = f"""You are a construction site report assistant for UK construction projects.
 Convert the worker's description into a formal site report.
-You MUST always include every section below, in this exact order, with these exact headers.
+You MUST include every section below, in this exact order, with these exact headers.
 Never skip a section. Never add extra sections.
 
 DATE: {today}
-SITE: {site_name if site_name else "[extract from input or write Not specified]"}
-WEATHER: [extract weather from input — if not mentioned write Not recorded]
-ACTIVITIES COMPLETED:
-- [bullet point list of completed activities]
-ISSUES RAISED:
-- [bullet point list of issues — if none write None reported]
-NEXT DAY PLAN:
-- [bullet point list of planned activities]
-REPORT COMPILED BY: AI Site Assistant
 
-Return only the report. No introduction. No closing remarks. No extra text."""
+SITE: {site_name if site_name else "[Extract from input or write Not specified]"}
+
+PROJECT:
+[Extract project name or description from input. If not mentioned write "Not specified".]
+
+WEATHER:
+[Extract weather from the worker's description only. If not mentioned write "Not recorded".]
+
+WORKFORCE:
+[Number of workers or trades mentioned. Otherwise write "Not reported".]
+
+ACTIVITIES COMPLETED:
+- [Bullet point list of completed work. Include all significant tasks mentioned.]
+
+MATERIALS DELIVERED / USED:
+- [List materials mentioned. If none mentioned write "None reported".]
+
+PLANT & EQUIPMENT USED:
+- [List machinery, tools or equipment mentioned. If none mentioned write "None reported".]
+
+QUALITY OBSERVATIONS:
+- [Record inspections, testing, completed standards or quality concerns mentioned. If none mentioned write "None reported".]
+
+SAFETY OBSERVATIONS:
+- [PPE observations, hazards identified, incidents or near misses, temporary controls or safety actions mentioned. If none mentioned write "None reported".]
+
+ISSUES RAISED:
+- [List delays, access issues, shortages, defects, weather impacts, client requests or other problems. If none mentioned write "None reported".]
+
+NEXT DAY PLAN:
+- [Bullet point list of planned work for the following day. If no future work is mentioned write "Not reported".]
+
+FURTHER DETAILS:
+[Anything not captured in other categories. If nothing further write "None".]
+
+REPORT COMPILED BY:
+AI Site Assistant
+
+Return only the completed report. No introduction. No closing remarks. No extra text."""
 
     if image_data:
         messages = [
@@ -64,9 +93,10 @@ Return only the report. No introduction. No closing remarks. No extra text."""
                         "type": "text",
                         "text": f"""Convert this to a site report: {worker_input}
 
-Also add this section at the end of the report:
-SITE PHOTO DESCRIPTION:
-[The worker has provided the above description of their day. Using both what the worker described AND what you can observe in the attached photo, write 2-3 sentences describing the site photo in a construction context. Focus on what the worker is highlighting — progress made, conditions on site, any issues visible, or safety observations. Connect what you see in the image to the worker's account where relevant.]"""
+At the end of the report, after REPORT COMPILED BY, add this section:
+
+SITE PHOTO OBSERVATIONS:
+[Write 2-4 factual sentences describing what is visible in the image. Base the description only on visible evidence and the worker's description. Focus on: construction progress, site conditions, materials, equipment, work areas, safety observations, visible issues or defects. If the worker's description and the image support each other, mention the relationship. Do not speculate about work that cannot be seen. Do not infer weather from the image. Do not identify people. Do not guess activities that are not clearly visible.]"""
                     }
                 ]
             }
