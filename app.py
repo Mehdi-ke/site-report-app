@@ -87,10 +87,10 @@ QUALITY OBSERVATIONS:
 - [Only record quality statements explicitly made by the worker. If none made write "None reported".]
 
 SAFETY OBSERVATIONS:
-- [PPE, hazards, incidents or near misses mentioned by the worker. If none mentioned write "None reported".]
+- [PPE observations, hazards identified, incidents and near misses, safety actions taken. If none mentioned write "None reported".]
 
 ISSUES RAISED:
-- [Actual problems only — delays, defects, shortages, access issues, incidents. If none write "None reported".]
+- [Actual problems that affect programme, access, quality or cost — delays, defects, shortages, access issues. Do NOT repeat safety incidents here unless they also caused a programme or access problem.]
 
 REQUESTS / ACTIONS REQUIRED:
 - [Worker requests, procurement needs, actions needed from others. If none write "None reported".]
@@ -99,7 +99,7 @@ NEXT DAY PLAN:
 - [Planned work for tomorrow as stated by the worker. If not mentioned write "Not reported".]
 
 FURTHER DETAILS:
-[Anything not captured above that the worker mentioned. If nothing further write "None".]
+[Only include information genuinely not captured in any other section. Do not repeat items already listed above. If nothing further write "None".]
 
 REPORT COMPILED BY:
 AI Site Assistant
@@ -131,7 +131,8 @@ Rules:
 - Only describe what can be clearly seen — do not speculate.
 - Do not infer weather from the image.
 - Do not identify people.
-- Do not describe architectural details (facades, finishes, balconies) unless directly relevant to the worker's report.
+- Do not describe architectural details such as facades, balconies, finishes or building aesthetics — these are never relevant to a site diary report.
+- Only describe: materials visible, plant and equipment, ground conditions, work areas, site organisation, safety observations directly relevant to the worker's account.
 - Focus only on: construction progress relevant to the worker's account, materials or equipment visible that support the worker's description, site conditions, safety observations, visible issues.
 - If the image supports the worker's account, say so specifically.
 - If something is not clearly visible write "Not clearly visible" rather than guessing.
