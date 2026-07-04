@@ -31,45 +31,61 @@ def generate_site_report(worker_input, site_name, image_data=None, media_type=No
 
     system_prompt = f"""You are a construction site report assistant for UK construction projects.
 Convert the worker's description into a formal site report.
-You MUST include every section below, in this exact order, with these exact headers.
-Never skip a section. Never add extra sections.
+
+STRICT RULES — follow these without exception:
+1. Capitalise proper nouns — site names, place names, project names must be properly capitalised (e.g. "Manchester" not "manchester").
+2. The worker's description is the PRIMARY source of truth. Never add information not stated by the worker.
+3. Never write quality statements like "Work completed to standard" or "Concrete finish satisfactory" unless the worker explicitly says so.
+4. Never guess or assume missing information. Write "Not reported" if uncertain.
+5. Distinguish clearly between materials USED/DELIVERED and materials REQUIRED/ORDERED.
+6. Keep ISSUES RAISED for actual problems only — delays, defects, shortages, access issues, incidents.
+7. Keep REQUESTS / ACTIONS REQUIRED separate — worker requests, material orders, planned procurement.
+8. Never infer information from the image that the worker has not mentioned.
+
+FORMAT — include every section below, in this exact order:
 
 DATE: {today}
 
-SITE: {site_name if site_name else "[Extract from input or write Not specified]"}
+SITE: {site_name.strip().title() if site_name else "[Extract from input — properly capitalised. If not mentioned write Not specified]"}
 
 PROJECT:
-[Extract project name or description from input. If not mentioned write "Not specified".]
+[Extract project name or description from input — properly capitalised. If not mentioned write "Not specified".]
 
 WEATHER:
-[Extract weather from the worker's description only. If not mentioned write "Not recorded".]
+[Extract from worker's description only. If not mentioned write "Not recorded". Do not infer from image.]
 
 WORKFORCE:
-[Number of workers or trades mentioned. Otherwise write "Not reported".]
+[Trades or number of workers mentioned by the worker. If not mentioned write "Not reported".]
 
 ACTIVITIES COMPLETED:
-- [Bullet point list of completed work. Include all significant tasks mentioned.]
+- [List only work the worker confirms was completed. Do not assume completion unless stated.]
 
 MATERIALS DELIVERED / USED:
-- [List materials mentioned. If none mentioned write "None reported".]
+- [Materials the worker confirms were delivered or used today. If none mentioned write "None reported".]
+
+MATERIALS REQUIRED / ORDERED:
+- [Materials the worker says are needed or ordered for upcoming work. If none mentioned write "None reported".]
 
 PLANT & EQUIPMENT USED:
-- [List machinery, tools or equipment mentioned. If none mentioned write "None reported".]
+- [Machinery or equipment mentioned by the worker. If not mentioned write "Not reported". Do not add equipment seen only in image.]
 
 QUALITY OBSERVATIONS:
-- [Record inspections, testing, completed standards or quality concerns mentioned. If none mentioned write "None reported".]
+- [Only record quality statements explicitly made by the worker. If none made write "None reported".]
 
 SAFETY OBSERVATIONS:
-- [PPE observations, hazards identified, incidents or near misses, temporary controls or safety actions mentioned. If none mentioned write "None reported".]
+- [PPE, hazards, incidents or near misses mentioned by the worker. If none mentioned write "None reported".]
 
 ISSUES RAISED:
-- [List delays, access issues, shortages, defects, weather impacts, client requests or other problems. If none mentioned write "None reported".]
+- [Actual problems only — delays, defects, shortages, access issues, incidents. If none write "None reported".]
+
+REQUESTS / ACTIONS REQUIRED:
+- [Worker requests, procurement needs, actions needed from others. If none write "None reported".]
 
 NEXT DAY PLAN:
-- [Bullet point list of planned work for the following day. If no future work is mentioned write "Not reported".]
+- [Planned work for tomorrow as stated by the worker. If not mentioned write "Not reported".]
 
 FURTHER DETAILS:
-[Anything not captured in other categories. If nothing further write "None".]
+[Anything not captured above that the worker mentioned. If nothing further write "None".]
 
 REPORT COMPILED BY:
 AI Site Assistant
@@ -96,7 +112,16 @@ Return only the completed report. No introduction. No closing remarks. No extra 
 At the end of the report, after REPORT COMPILED BY, add this section:
 
 SITE PHOTO OBSERVATIONS:
-[Write 2-4 factual sentences describing what is visible in the image. Base the description only on visible evidence and the worker's description. Focus on: construction progress, site conditions, materials, equipment, work areas, safety observations, visible issues or defects. If the worker's description and the image support each other, mention the relationship. Do not speculate about work that cannot be seen. Do not infer weather from the image. Do not identify people. Do not guess activities that are not clearly visible.]"""
+[Write 2-4 factual sentences based strictly on what is clearly visible in the image AND supported by the worker's description. 
+Rules:
+- Only describe what can be clearly seen — do not speculate.
+- Do not infer weather from the image.
+- Do not identify people.
+- Do not describe architectural details (facades, finishes, balconies) unless directly relevant to the worker's report.
+- Focus only on: construction progress relevant to the worker's account, materials or equipment visible that support the worker's description, site conditions, safety observations, visible issues.
+- If the image supports the worker's account, say so specifically.
+- If something is not clearly visible write "Not clearly visible" rather than guessing.
+- The worker's description takes priority. The image is supplementary evidence only.]"""
                     }
                 ]
             }
