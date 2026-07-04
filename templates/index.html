@@ -202,6 +202,50 @@
       object-fit: cover;
     }
 
+    .voice-input-wrapper {
+      position: relative;
+    }
+
+    .voice-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    #micBtn {
+      margin-top: 0;
+      width: auto;
+      padding: 8px 16px;
+      background: #1a1a2e;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    #micBtn.listening {
+      background: #c0392b;
+      animation: pulse 1.5s infinite;
+    }
+
+    #micBtn:hover { background: #2d2d5e; }
+    #micBtn.listening:hover { background: #e74c3c; }
+
+    #voiceStatus {
+      font-size: 12px;
+      color: #888;
+      font-style: italic;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+
     @media print {
       header, .panel:first-child, .print-btn { display: none; }
       .container { grid-template-columns: 1fr; padding: 0; }
@@ -231,7 +275,15 @@
         <input type="text" name="site_name" placeholder="e.g. City Road Development, Manchester" value="{{ site_name or '' }}">
 
         <label>Describe your day on site</label>
-        <textarea name="worker_input" rows="10" placeholder="Describe what happened today in your own words — activities completed, any issues or delays, and what is planned for tomorrow...">{{ worker_input or '' }}</textarea>
+        <div class="voice-input-wrapper">
+          <textarea name="worker_input" id="worker_input" rows="10" placeholder="Describe what happened today in your own words — or click the microphone to speak...">{{ worker_input or '' }}</textarea>
+          <div class="voice-controls">
+            <button type="button" id="micBtn" onclick="toggleVoice()">
+              🎤 Start Speaking
+            </button>
+            <span id="voiceStatus"></span>
+          </div>
+        </div>
 
         <label>Site Photo (optional)</label>
         <div class="file-upload">
@@ -268,6 +320,87 @@
     </div>
 
   </div>
+  <script>
+    let recognition = null;
+    let isListening = false;
+
+    function toggleVoice() {
+      if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        alert('Voice input is not supported in this browser. Please use Chrome or Edge.');
+        return;
+      }
+
+      if (isListening) {
+        stopVoice();
+      } else {
+        startVoice();
+      }
+    }
+
+    function startVoice() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRecognition();
+
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'en-GB';
+
+      const textarea = document.getElementById('worker_input');
+      const micBtn = document.getElementById('micBtn');
+      const voiceStatus = document.getElementById('voiceStatus');
+
+      let finalTranscript = textarea.value;
+
+      recognition.onstart = function() {
+        isListening = true;
+        micBtn.textContent = '⏹ Stop Speaking';
+        micBtn.classList.add('listening');
+        voiceStatus.textContent = 'Listening...';
+      };
+
+      recognition.onresult = function(event) {
+        let interimTranscript = '';
+
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          if (event.results[i].isFinal) {
+            finalTranscript += event.results[i][0].transcript + ' ';
+          } else {
+            interimTranscript += event.results[i][0].transcript;
+          }
+        }
+
+        textarea.value = finalTranscript + interimTranscript;
+      };
+
+      recognition.onerror = function(event) {
+        voiceStatus.textContent = 'Error: ' + event.error;
+        stopVoice();
+      };
+
+      recognition.onend = function() {
+        if (isListening) {
+          recognition.start();
+        }
+      };
+
+      recognition.start();
+    }
+
+    function stopVoice() {
+      if (recognition) {
+        recognition.stop();
+        recognition = null;
+      }
+
+      isListening = false;
+      const micBtn = document.getElementById('micBtn');
+      const voiceStatus = document.getElementById('voiceStatus');
+
+      micBtn.textContent = '🎤 Start Speaking';
+      micBtn.classList.remove('listening');
+      voiceStatus.textContent = 'Done — review and submit when ready.';
+    }
+  </script>
 
 </body>
 </html>
