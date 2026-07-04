@@ -178,10 +178,36 @@
 
     .print-btn:hover { background: #f0f0f0; }
 
+    .site-photo {
+      margin-top: 16px;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .photo-label {
+      background: #1a1a2e;
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .site-photo img {
+      width: 100%;
+      display: block;
+      max-height: 400px;
+      object-fit: cover;
+    }
+
     @media print {
       header, .panel:first-child, .print-btn { display: none; }
       .container { grid-template-columns: 1fr; padding: 0; }
       .panel { border: none; box-shadow: none; }
+      .site-photo { margin-top: 24px; page-break-inside: avoid; }
+      .site-photo img { max-height: none; }
     }
 
     @media (max-width: 768px) {
@@ -227,6 +253,14 @@
       <h2>Generated Report</h2>
       {% if report %}
         <div class="report-box">{{ report }}</div>
+
+        {% if image_data %}
+        <div class="site-photo">
+          <p class="photo-label">Site Photo</p>
+          <img src="data:{{ media_type }};base64,{{ image_data }}" alt="Site photo">
+        </div>
+        {% endif %}
+
         <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
       {% else %}
         <div class="report-box empty">Your generated report will appear here...</div>

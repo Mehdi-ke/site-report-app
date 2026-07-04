@@ -123,7 +123,9 @@ def generate():
                          report=report,
                          worker_input=worker_input,
                          site_name=site_name,
-                         upload_message=upload_message)
+                         upload_message=upload_message,
+                         image_data=image_data,
+                         media_type=media_type)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
