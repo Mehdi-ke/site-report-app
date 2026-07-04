@@ -270,6 +270,95 @@
 
     <div class="panel">
       <h2>Worker Input</h2>
+
+      <h2>Worker Input</h2>
+
+      <details class="help-panel">
+        <summary>💡 What to include in your report</summary>
+        <div class="help-content">
+          <p class="help-intro">Describe your day in plain English — by typing or speaking. Cover as many of these as you can:</p>
+          <div class="help-grid">
+            <div class="help-item">
+              <span class="help-icon">📍</span>
+              <div>
+                <strong>Site & Project</strong>
+                <p>Site name, location, project name</p>
+                <em>"We are at the Victory project in Manchester"</em>
+              </div>
+            </div>
+            <div class="help-item">
+              <span class="help-icon">🌤️</span>
+              <div>
+                <strong>Weather</strong>
+                <p>Conditions that affected work</p>
+                <em>"Weather was sunny and warm today"</em>
+              </div>
+            </div>
+            <div class="help-item">
+              <span class="help-icon">👷</span>
+              <div>
+                <strong>Workforce</strong>
+                <p>Number of workers or trades on site</p>
+                <em>"We had 6 labourers and 2 bricklayers on site"</em>
+              </div>
+            </div>
+            <div class="help-item">
+              <span class="help-icon">✅</span>
+              <div>
+                <strong>Activities Completed</strong>
+                <p>What was actually finished today</p>
+                <em>"We completed the flooring concrete on grid C"</em>
+              </div>
+            </div>
+            <div class="help-item">
+              <span class="help-icon">🧱</span>
+              <div>
+                <strong>Materials</strong>
+                <p>What was used today and what is needed</p>
+                <em>"We used 50 blocks. We need 100 bags of cement"</em>
+              </div>
+            </div>
+            <div class="help-item">
+              <span class="help-icon">🚜</span>
+              <div>
+                <strong>Plant & Equipment</strong>
+                <p>Machinery or tools used</p>
+                <em>"The excavator was used to level the ground"</em>
+              </div>
+            </div>
+            <div class="help-item">
+              <span class="help-icon">⚠️</span>
+              <div>
+                <strong>Issues & Problems</strong>
+                <p>Delays, shortages, defects, access problems</p>
+                <em>"Concrete delivery arrived 2 hours late"</em>
+              </div>
+            </div>
+            <div class="help-item">
+              <span class="help-icon">🦺</span>
+              <div>
+                <strong>Safety</strong>
+                <p>Incidents, near misses, hazards, PPE observations</p>
+                <em>"No incidents today. All workers wearing PPE"</em>
+              </div>
+            </div>
+            <div class="help-item">
+              <span class="help-icon">📅</span>
+              <div>
+                <strong>Next Day Plan</strong>
+                <p>What is planned for tomorrow</p>
+                <em>"Tomorrow we will begin paving works"</em>
+              </div>
+            </div>
+          </div>
+          <div class="help-example">
+            <strong>Example voice report:</strong>
+            <p>"We are at the City Road development in Manchester. Weather was sunny today. We had 4 labourers on site. We finished laying the drainage run on the east side. The excavator was used for ground levelling. We used 20 concrete blocks and need a delivery of 50 more tomorrow. There was a near miss with a forklift near the welfare unit — reported to site manager. Tomorrow we plan to start the pile caps on zone 2, concrete pump is booked for 7am."</p>
+          </div>
+        </div>
+      </details>
+
+      
       <form method="POST" action="/generate" enctype="multipart/form-data">
         <label>Site Name</label>
         <input type="text" name="site_name" placeholder="e.g. City Road Development, Manchester" value="{{ site_name or '' }}">
@@ -292,7 +381,7 @@
         </div>
 
         {% if upload_message %}
-          <div class="upload-message {{ 'success' if uploaded_filename else 'error' }}">
+          <div class="upload-message {{ 'success' if 'uploaded' in upload_message.lower() else 'error' }}">
             {{ upload_message }}
           </div>
         {% endif %}
