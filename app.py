@@ -165,6 +165,7 @@ def home():
 def generate():
     worker_input = request.form["worker_input"]
     site_name = request.form["site_name"]
+    include_transcript = request.form.get("include_transcript") == "yes"
 
     upload_message = None
     image_data = None
@@ -206,7 +207,8 @@ def generate():
                          site_name=site_name,
                          upload_message=upload_message,
                          image_data=image_data,
-                         media_type=media_type)
+                         media_type=media_type,
+                         include_transcript=include_transcript)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))

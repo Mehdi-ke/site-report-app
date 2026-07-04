@@ -350,6 +350,57 @@
       font-style: italic;
       font-size: 11px;
     }
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .checkbox-row input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .checkbox-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #555;
+      margin: 0;
+      cursor: pointer;
+    }
+
+    .transcript-box {
+      margin-top: 16px;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .transcript-label {
+      background: #f0f0f0;
+      color: #555;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .transcript-text {
+      padding: 12px;
+      font-size: 13px;
+      color: #444;
+      line-height: 1.7;
+      background: #fafafa;
+      white-space: pre-wrap;
+    }
+
+    @media print {
+      .transcript-box { margin-top: 24px; page-break-inside: avoid; }
+    }
 
     @media print {
       header, .panel:first-child, .print-btn { display: none; }
@@ -363,10 +414,7 @@
     @media (max-width: 768px) {
       .container { grid-template-columns: 1fr; }
     }
-
-    @media (max-width: 768px) {
-      .container { grid-template-columns: 1fr; }
-    }
+    
   </style>
 </head>
 <body>
@@ -501,6 +549,11 @@
         </div>
         {% endif %}
 
+        <div class="checkbox-row">
+          <input type="checkbox" name="include_transcript" id="include_transcript" value="yes">
+          <label for="include_transcript" class="checkbox-label">Include original voice/text transcript at end of report</label>
+        </div>
+
         <button type="submit">Generate Site Report</button>
       </form>
     </div>
@@ -521,6 +574,14 @@
       {% else %}
         <div class="report-box empty">Your generated report will appear here...</div>
       {% endif %}
+
+      {% if worker_input and include_transcript %}
+        <div class="transcript-box">
+          <p class="transcript-label">Original Transcript</p>
+          <p class="transcript-text">{{ worker_input }}</p>
+        </div>
+        {% endif %}
+        
     </div>
 
   </div>
