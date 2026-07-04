@@ -25,6 +25,20 @@ def get_media_type(filename):
         "gif": "image/gif"
     }
     return media_types.get(ext, "image/jpeg")
+def is_construction_relevant(text):
+    message = client.messages.create(
+        model="claude-haiku-4-5-20251001",
+        max_tokens=10,
+        system="You are a validator. Reply only with YES or NO.",
+        messages=[
+            {
+                "role": "user",
+                "content": f"Is this description relevant to construction site work, building activities, or site management? Reply YES or NO only.\n\n{text}"
+            }
+        ]
+    )
+    result = message.content[0].text.strip().upper()
+    return result.startswith("YES")
 
 def generate_site_report(worker_input, site_name, image_data=None, media_type=None):
     today = date.today().strftime("%d/%m/%Y")
@@ -155,16 +169,28 @@ def generate():
     upload_message = None
     image_data = None
     media_type = None
+    validation_error = None
+
+    if not worker_input.strip():
+        validation_error = "Please describe your day on site before generating a report."
+        return render_template("index.html",
+                             validation_error=validation_error,
+                             site_name=site_name)
+
+    if not is_construction_relevant(worker_input):
+        validation_error = "Your description does not appear to be related to construction site work. Please describe your day on site — activities completed, any issues, and tomorrow's plan — and try again."
+        return render_template("index.html",
+                             validation_error=validation_error,
+                             worker_input=worker_input,
+                             site_name=site_name)
 
     if "site_photo" in request.files:
         file = request.files["site_photo"]
-
         if file.filename != "":
             if not allowed_file(file.filename):
                 upload_message = "File type not allowed. Please upload a PNG, JPG or GIF."
             else:
                 file_bytes = file.read()
-
                 if len(file_bytes) > MAX_FILE_SIZE:
                     upload_message = "File too large. Maximum size is 5MB."
                 else:

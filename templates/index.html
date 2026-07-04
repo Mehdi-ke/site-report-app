@@ -297,6 +297,12 @@
           </div>
         {% endif %}
 
+        {% if validation_error %}
+        <div class="upload-message error">
+          ⚠️ {{ validation_error }}
+        </div>
+        {% endif %}
+
         <button type="submit">Generate Site Report</button>
       </form>
     </div>
