@@ -246,12 +246,122 @@
       100% { opacity: 1; }
     }
 
+    .help-panel {
+      margin-bottom: 20px;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .help-panel summary {
+      padding: 12px 16px;
+      background: #f8f8f8;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1a1a2e;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      user-select: none;
+    }
+
+    .help-panel summary::-webkit-details-marker { display: none; }
+
+    .help-panel[open] summary {
+      background: #1a1a2e;
+      color: white;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .help-content {
+      padding: 16px;
+      background: #fafafa;
+    }
+
+    .help-intro {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 12px;
+    }
+
+    .help-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .help-item {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 10px;
+    }
+
+    .help-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .help-item strong {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: #1a1a2e;
+      margin-bottom: 2px;
+    }
+
+    .help-item p {
+      font-size: 11px;
+      color: #666;
+      margin: 0 0 3px;
+    }
+
+    .help-item em {
+      font-size: 10px;
+      color: #888;
+      font-style: italic;
+    }
+
+    .help-example {
+      background: #e8f0fe;
+      border: 1px solid #c5d5f5;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 11px;
+    }
+
+    .help-example strong {
+      display: block;
+      color: #1a1a2e;
+      margin-bottom: 4px;
+      font-size: 11px;
+    }
+
+    .help-example p {
+      color: #333;
+      line-height: 1.5;
+      margin: 0;
+      font-style: italic;
+      font-size: 11px;
+    }
+
     @media print {
       header, .panel:first-child, .print-btn { display: none; }
       .container { grid-template-columns: 1fr; padding: 0; }
       .panel { border: none; box-shadow: none; }
       .site-photo { margin-top: 24px; page-break-inside: avoid; }
       .site-photo img { max-height: none; }
+      .help-panel { display: none; }
+    }
+
+    @media (max-width: 768px) {
+      .container { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 768px) {
@@ -269,10 +379,9 @@
   <div class="container">
 
     <div class="panel">
-      <h2>Worker Input</h2>
+      <h2>Site Report</h2>
 
-      <h2>Worker Input</h2>
-
+      
       <details class="help-panel">
         <summary>💡 What to include in your report</summary>
         <div class="help-content">
