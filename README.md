@@ -1,103 +1,139 @@
 # Site Report Generator
 
-A Flask web app that converts a worker's plain English description of their day into a formal, structured construction site report — instantly. Supports photo upload with AI-powered image analysis using Claude Vision.
+**Turn a worker's spoken or typed description of their day into a professional site report in seconds.**
 
-## What It Does
+Site managers and operatives spend time at the end of every shift filling in paper or PDF site reports — often from memory, in a van, on a phone. This tool eliminates that friction. A worker describes their day in plain English (or speaks it), uploads an optional site photo, and receives a complete, consistently formatted report ready to print or save as PDF.
 
-A worker describes their day in their own words and optionally attaches a site photo. The app sends both to the Anthropic Claude API, which returns a professional site report with fixed sections every time:
+---
 
-- **Date** — automatically populated
-- **Site** — extracted from input or entered manually, properly capitalised
-- **Project** — extracted from worker description
-- **Weather** — extracted from worker description only
-- **Workforce** — trades or numbers mentioned
-- **Activities Completed** — confirmed completed work only
-- **Materials Delivered / Used** — materials used today
-- **Materials Required / Ordered** — materials requested for upcoming work
-- **Plant & Equipment Used** — machinery mentioned by the worker
-- **Quality Observations** — only what the worker explicitly states
-- **Safety Observations** — PPE, hazards, incidents, near misses
-- **Issues Raised** — delays, defects, access problems, shortages
-- **Requests / Actions Required** — procurement needs, actions needed from others
-- **Next Day Plan** — tomorrow's planned activities
-- **Further Details** — anything not captured above
-- **Report Compiled By** — AI Site Assistant
-- **Site Photo Observations** — AI analysis of the attached photo, cross-referenced with the worker's description
+## The Problem It Solves
 
-The report renders on screen with the site photo displayed below, and can be printed or saved as A4 PDF directly from the browser.
+Site reports are a contractual and operational necessity — but they are slow to produce, inconsistently formatted, and often incomplete when written by hand after a long shift. Missing information, vague entries, and inconsistent section headings create problems for QS teams, site managers, and project records.
 
-## Key Design Principles
+This tool enforces a fixed 16-section report structure every time, extracts only what the worker actually reported (no invented observations), and produces a print-ready A4 document in under 10 seconds.
 
-- **Worker's description is the primary source of truth** — the image is supplementary evidence only
-- **No assumptions** — if information is not stated, the report writes "Not reported" rather than guessing
-- **No invented quality statements** — Claude never writes "Work completed to standard" unless the worker explicitly says so
-- **Materials distinguished** — used/delivered today vs required/ordered for future work are kept separate
-- **Issues vs Requests separated** — actual problems kept distinct from procurement requests
-- **Proper capitalisation** — site names and place names are correctly formatted
+---
 
-## Technology
+## Who Uses It
 
-- Python
-- Flask
-- Anthropic Claude API (claude-haiku-4-5-20251001) with Vision
-- Jinja2 templates
-- CSS Grid layout — two panel responsive design
-- Print stylesheet — A4 print-ready with site photo at end of report
-- python-dotenv for secure API key management
-- Base64 image encoding — no file storage required
+- **Site operatives** — describe their day by voice or text at the end of a shift
+- **Site managers** — review and print structured daily records without chasing workers for information
+- **QS and commercial teams** — consistent format makes cross-referencing with programmes and contract records straightforward
 
-## How to Run Locally
+---
 
-1. Clone the repo
-2. Create and activate a virtual environment:
-```bash
-   python -m venv venv
-   venv\Scripts\activate
-```
-3. Install dependencies:
-```bash
-   pip install flask anthropic python-dotenv gunicorn
-```
-4. Create a `.env` file with your Anthropic API key:
-   ANTHROPIC_API_KEY=your-key-here
-5. Run the app:
-```bash
-   python app.py
-```
-6. Open your browser at `http://127.0.0.1:5000`
+## What It Produces
 
-## Example Input
+Every report contains the same 16 sections:
+
+| Section | Source |
+|---|---|
+| Date | Auto-populated |
+| Site / Project | Extracted from worker description |
+| Weather | Worker description only |
+| Workforce | Trades or numbers mentioned |
+| Activities Completed | Confirmed completed work only |
+| Materials Delivered / Used | Materials used today |
+| Materials Required / Ordered | Materials needed for upcoming work |
+| Plant & Equipment Used | Machinery mentioned by the worker |
+| Quality Observations | Only what the worker explicitly states |
+| Safety Observations | PPE, hazards, incidents, near misses |
+| Issues Raised | Delays, defects, access problems, shortages |
+| Requests / Actions Required | Procurement needs, actions needed from others |
+| Next Day Plan | Tomorrow's planned activities |
+| Further Details | Anything not captured above |
+| Report Compiled By | AI Site Assistant |
+| Site Photo Observations | Claude Vision analysis of uploaded photo |
+
+**Key principle: the worker's description is the primary source of truth. If something is not reported, the field reads "Not reported" — the AI never invents observations or assumptions.**
+
+---
+
+## Example
+
+**Worker input:**
 
 > "Site is the Victory project in Manchester. Weather is warm and clear today. We continued external works around the apartment buildings. The wheeled excavator was used to level and clear parts of the ground. We require a delivery of 150 concrete blocks, 100 bags of cement, 2 tonnes of sand and gravel. No accidents reported today. Tomorrow we plan to complete site clearance and begin paving works."
 
-## Example Output Sections
-DATE: 04/07/2026
-SITE: Manchester
-PROJECT: Victory
-WEATHER: Warm and clear
-ACTIVITIES COMPLETED:
+**Generated report (selected sections):**
 
-Continued external works around apartment buildings
-Levelled and cleared ground using wheeled excavator
+```
+DATE:                    04/07/2026
+SITE:                    Manchester
+PROJECT:                 Victory
+WEATHER:                 Warm and clear
+
+ACTIVITIES COMPLETED:
+- Continued external works around apartment buildings
+- Levelled and cleared ground using wheeled excavator
+
 MATERIALS REQUIRED / ORDERED:
-150 concrete blocks
-100 bags of cement
-2 tonnes of sand and gravel
+- 150 concrete blocks
+- 100 bags of cement
+- 2 tonnes of sand and gravel
+
 SAFETY OBSERVATIONS:
 No accidents or injuries reported
+
 NEXT DAY PLAN:
-Complete site clearance
-Begin paving works around building
+- Complete site clearance
+- Begin paving works around building
+
 REPORT COMPILED BY:
 AI Site Assistant
+```
 
-## File Upload & Vision
+---
+
+## Features
+
+- **Voice input** — worker speaks their description using the browser's built-in speech recognition (no app or plugin required); text input available as alternative
+- **Photo upload with AI analysis** — upload a site photo and Claude Vision analyses it, cross-referencing with the worker's description to add a Site Photo Observations section
+- **Print-ready output** — formatted for A4, with the site photo printed at the end of the report
+- **Construction relevance check** — rejects unrelated input with a clear message
+- **Original transcript option** — worker can choose whether to include their raw spoken transcript in the report
+
+---
+
+## Technology
+
+- Python / Flask
+- Anthropic Claude API with Vision (claude-haiku-4-5-20251001)
+- Web Speech API (voice input, no third-party library)
+- Jinja2 templates
+- CSS Grid — two-panel responsive layout
+- python-dotenv
+
+---
+
+## How to Run
+
+```bash
+# 1. Clone the repo
+git clone https://github.com/Mehdi-ke/site-report-app
+cd site-report-app
+
+# 2. Create and activate a virtual environment
+python -m venv venv
+venv\Scripts\activate      # Windows
+# source venv/bin/activate  # Mac/Linux
+
+# 3. Install dependencies
+pip install flask anthropic python-dotenv gunicorn
+
+# 4. Add your API key
+# Create a .env file in the project root:
+ANTHROPIC_API_KEY=your-key-here
+
+# 5. Run the app
+python app.py
+```
+
+Open your browser at `http://127.0.0.1:5000`
+
+---
+
+## File Upload Notes
 
 - Accepts PNG, JPG, GIF up to 5MB
-- Image is read directly into memory — no server-side file storage required
-- Claude Vision analyses the image and cross-references it with the worker's description
-- Image displays below the report on screen and in print
-
-## Deployment
-
-Deployed on Railway with gunicorn. Environment variables managed via Railway's Variables panel.
+- Images are processed in memory — no files are stored on the server
