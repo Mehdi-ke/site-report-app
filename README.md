@@ -137,3 +137,8 @@ Open your browser at `http://127.0.0.1:5000`
 
 - Accepts PNG, JPG, GIF up to 5MB
 - Images are processed in memory — no files are stored on the server
+
+- ## Screen shot
+
+  <img width="1801" height="902" alt="site-report-app" src="https://github.com/user-attachments/assets/695859b0-feea-4a69-86a4-79bed8359794" />
+
